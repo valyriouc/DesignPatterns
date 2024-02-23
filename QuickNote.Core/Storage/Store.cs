@@ -4,8 +4,10 @@ namespace QuickNote.Core.Storage;
 /// Represents the complete set of todo lists in a single directory 
 /// </summary>
 internal class Store {
-    
+
     public HashSet<TodoFile> MarkdownFiles { get; init; }
+
+    public IEnumerable<TodoFile> FilesIter => MarkdownFiles.AsEnumerable();
 
     private Store(IEnumerable<TodoFile> files) {
         MarkdownFiles = new(files);
@@ -23,4 +25,6 @@ internal class Store {
 
         return new Store(files);
     }
+
+
 }
