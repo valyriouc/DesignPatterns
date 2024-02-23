@@ -3,7 +3,7 @@ using System.Text;
 
 namespace QuickNote.Core.Storage;
 
-internal struct TodoFile {
+internal struct TodoFile : IEquatable<TodoFile> {
 
     public string Fullpath { get; }
 
@@ -46,4 +46,7 @@ internal struct TodoFile {
             return false;
         } 
     }
+
+    public bool Equals(TodoFile other) => 
+        this.Identifier.Date == other.Identifier.Date;
 }
