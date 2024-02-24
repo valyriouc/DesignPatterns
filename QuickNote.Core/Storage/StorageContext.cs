@@ -37,11 +37,11 @@ public class StorageContext {
         Store = Store.FromFileSystem(basepath);
     }
 
-    public async IAsyncEnumerable<T> GetCurrentAsync<T>() 
+    public async IAsyncEnumerable<T> GetSingleAsync<T>(DateTime identifier) 
         where T : IMarkdownReadable<T>{
         
         TodoFile? file = Store.MarkdownFiles
-            .FirstOrDefault(x => x.Identifier.Date == DateTime.Now.Date);
+            .FirstOrDefault(x => x.Identifier.Date == identifier.Date);
 
         if (file is null) {
             yield break;
