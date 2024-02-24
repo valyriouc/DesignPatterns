@@ -5,17 +5,14 @@ internal struct MarkdownNode {
 
     public MdSyntax Identifier;
 
-    private ValueType? Type { get; }
-
     private string? Content { get; }
 
     public MarkdownNode() {
         Identifier = MdSyntax.Finished;
     }
 
-    private MarkdownNode(MdSyntax syntax, ValueType type, string content) {
+    private MarkdownNode(MdSyntax syntax, string content) {
         Identifier = syntax;
-        Type = type;
         Content = content;
     }
 
@@ -28,14 +25,13 @@ internal struct MarkdownNode {
 
     public static MarkdownNode Create<T>(
         MdSyntax ident,
-        T value,
-        string content)
+        T value)
         where T : struct {
         Type type = typeof(T);
         if (!type.IsValueType) {
             throw new Exception("Expected value type!");
         }
-        MarkdownNode node = new MarkdownNode(ident, value, content);
+        MarkdownNode node = new MarkdownNode(ident, value.ToString());
 
         return node;
     }
