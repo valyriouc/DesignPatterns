@@ -1,7 +1,7 @@
 
 namespace QuickNote.Core.Storage;
 
-internal class MdReaderBuilder {
+public class MdReaderBuilder {
     
     private MarkdownReader Reader { get; set;}
 

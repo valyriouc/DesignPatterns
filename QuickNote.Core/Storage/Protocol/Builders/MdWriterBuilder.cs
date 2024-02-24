@@ -1,7 +1,7 @@
 
 namespace QuickNote.Core.Storage;
 
-internal class MdWriterBuilder {
+public class MdWriterBuilder {
     
     private MarkdownWriter Writer { get; set;}
 
