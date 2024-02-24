@@ -1,5 +1,3 @@
-using System.Collections;
-
 namespace QuickNote.Core.Storage;
 
 public class StorageContext {
@@ -46,7 +44,7 @@ public class StorageContext {
                 MarkdownWriter writer = Writer.Copy();
                 yield return writer.Write(todo.Write());
             }
-        }
+    }
 
     public async Task UpdateOrCreateAsync<T>(DateTime datetime, IEnumerable<T> todos) 
         where T : IMarkdownWriteable<T> {
