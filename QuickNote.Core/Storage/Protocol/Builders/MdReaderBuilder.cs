@@ -9,19 +9,19 @@ internal class MdReaderBuilder {
         Reader = new();
     }
 
-    public MdReaderBuilder WithCheckParser() {
+    public MdReaderBuilder WithCheck() {
         Reader.AddModule(MdSyntax.Check, (string content) => 
             new MarkdownNode(MdSyntax.Check, (content == "[X]").ToString()));
         return this;
     }
 
-    public MdReaderBuilder WithNameParser() {
+    public MdReaderBuilder WithName() {
         Reader.AddModule(MdSyntax.Name, (string content) => 
             new MarkdownNode(MdSyntax.Name, content.Substring(1, content.Length - 1)));
         return this;
     }
 
-    public MdReaderBuilder WithAppointmentParser() {
+    public MdReaderBuilder WithAppointment() {
         Reader.AddModule(MdSyntax.Appointment, (string content) => 
             new MarkdownNode(MdSyntax.Appointment, (content.Substring(1, content.Length - 1) == "true").ToString()));
         return this;
@@ -33,7 +33,7 @@ internal class MdReaderBuilder {
         return this;
     }
     
-    public MarkdownReader Build() {
+    internal MarkdownReader Build() {
         MarkdownReader reader = Reader;
         Reader = new MarkdownReader();
         return reader;
