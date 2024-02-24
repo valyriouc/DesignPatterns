@@ -14,36 +14,6 @@ internal enum MarkdownModule {
 
 internal delegate MarkdownNode? ModuleDelegate(string content);
 
-internal struct MarkdownNode {
-
-    public bool IsFinish { get; }
-
-    public ValueType? Type { get; }
-
-    public string? Content { get; }
-
-    public MarkdownNode() {
-        IsFinish = true;
-    }
-
-    public MarkdownNode(ValueType type, string content) {
-        Type = type;
-        Content = content;
-    }
-
-    public bool TryConvert<TType>(out TType? value) 
-        where TType : IParsable<TType> {
-        value = default(TType);
-        if (IsFinish) return false;
-        return TType.TryParse(Content, null, out value);
-    }
-}
-
-internal interface IPrototypable<T> {
-
-    public T Copy();
-}
-
 internal sealed class MarkdownReader : IPrototypable<MarkdownReader>
 {
     private Dictionary<MarkdownModule, ModuleDelegate> Modules { get; set;}
