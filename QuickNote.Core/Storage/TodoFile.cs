@@ -21,9 +21,9 @@ internal struct TodoFile : IEquatable<TodoFile> {
         return DateTime.Parse(filename);
     }
 
-    public async Task AppendAsync(Func<IAsyncEnumerable<string>> contentProvider) {
+    public void Append(Func<IEnumerable<string>> contentProvider) {
         StringBuilder sb = new StringBuilder();
-        await foreach (string line in contentProvider()) {
+        foreach (string line in contentProvider()) {
             sb.AppendLine(line);
         }
         using StreamWriter writer = File.AppendText(Fullpath);

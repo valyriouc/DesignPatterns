@@ -1,12 +1,13 @@
 
 using System.Reflection;
 using System.Text;
+using QuickNote.Core.Helper;
 
 namespace QuickNote.Core.Storage;
 
 internal delegate string? MdWritingDelegate(MarkdownNode node);
 
-internal sealed class MarkdownWriter {
+internal sealed class MarkdownWriter : IPrototypable<MarkdownWriter> {
 
     private Dictionary<MdSyntax, MdWritingDelegate> Modules {get; set;}
 
@@ -49,5 +50,14 @@ internal sealed class MarkdownWriter {
         }
 
         return sb.ToString();
-    }   
+    }
+
+    public MarkdownWriter Copy()
+    {
+        MarkdownWriter writer = new();
+
+        writer.Modules = this.Modules;
+
+        return writer;
+    }
 }
