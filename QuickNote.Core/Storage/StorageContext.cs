@@ -1,5 +1,18 @@
 namespace QuickNote.Core.Storage;
 
+public struct TodoCollection<T> 
+    where T : IMarkdownReadable<T> {
+
+    public DateTime Identifier { get; init; }
+
+    public IEnumerable<T> Todos { get; init; }
+
+    public TodoCollection(DateTime identifier, IEnumerable<T> todos) {
+        Identifier = identifier;
+        Todos = todos;
+    }
+}
+
 /// <summary>
 /// It's a proxy around the whole persistence/storage mechanism 
 /// </summary>
@@ -38,6 +51,23 @@ public class StorageContext {
             MarkdownReader reader = Reader.Copy();
             IEnumerable<MarkdownNode> nodes = reader.Read(line);
             yield return T.Read(nodes);
+        }
+    }
+
+    public async IAsyncEnumerable<TodoCollection<T>> GetAllAsync<T>() 
+        where T : IMarkdownReadable<T> {
+
+        IEnumerable<TodoFile> files = Store.MarkdownFiles.AsEnumerable();
+
+        foreach (TodoFile file in files) {
+            MarkdownReader reader = Reader.Copy();
+            List<T> todos = new List<T>();
+            foreach (string? line in await file.ReadLines) {
+                IEnumerable<MarkdownNode> nodes = reader.Read(line);
+                T res = T.Read(nodes);
+                todos.Add(res);
+            }
+            yield return new TodoCollection<T>(file.Identifier, todos);
         }
     }
 
