@@ -9,7 +9,7 @@ Builder is a creational design pattern that lets you construct complex objects s
 
 ## Prototype 
 Prototype is a creational design pattern that lets you copy existing objects without making your code dependent on their classes. - refactoring.guru
-
+- .NET supports this pattern by design through an interface called I
 # Structural patterns 
 ## Adapter 
 Adapter is a structural design pattern that allows objects with incompatible interfaces to collaborate. - refactoring.guru
@@ -36,3 +36,5 @@ Observer is a behavioral design pattern that lets you define a subscription mech
 
 ### Examples:
 - MQTT is designed around this pattern 
+
+[] {Name} {IsAppointment:true(Datetime)/false} {FinishDate:Datetime}
