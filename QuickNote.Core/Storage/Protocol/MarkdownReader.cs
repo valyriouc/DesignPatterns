@@ -5,24 +5,25 @@ using QuickNote.Core.Helper;
 
 namespace QuickNote.Core.Storage;
 
-internal enum MarkdownModule {
+internal enum MdSyntax {
     Check = 0,
     Name = 1,
     Appointment = 2,
-    Enddate = 3
+    Enddate = 3,
+    Finished = 100
 }
 
-internal delegate MarkdownNode? ModuleDelegate(string content);
+internal delegate MarkdownNode? MdReaderDelegate(string content);
 
 internal sealed class MarkdownReader : IPrototypable<MarkdownReader>
 {
-    private Dictionary<MarkdownModule, ModuleDelegate> Modules { get; set;}
+    private Dictionary<MdSyntax, MdReaderDelegate> Modules { get; set;}
 
     public MarkdownReader() {
-        Modules = new Dictionary<MarkdownModule, ModuleDelegate>();
+        Modules = new Dictionary<MdSyntax, MdReaderDelegate>();
     }
 
-    public bool AddModule(MarkdownModule identifier, ModuleDelegate module) {
+    public bool AddModule(MdSyntax identifier, MdReaderDelegate module) {
         if (Modules.ContainsKey(identifier)) {
             return false;
         }
@@ -31,7 +32,7 @@ internal sealed class MarkdownReader : IPrototypable<MarkdownReader>
         return true;
     }
 
-    public bool RemoveModule(MarkdownModule module) => Modules.Remove(module);
+    public bool RemoveModule(MdSyntax module) => Modules.Remove(module);
 
     public IEnumerable<MarkdownNode> Read(string line) {
         if (string.IsNullOrWhiteSpace(line)) {
@@ -39,7 +40,7 @@ internal sealed class MarkdownReader : IPrototypable<MarkdownReader>
         }
 
         string[] data = line.Split(" ");
-        MarkdownNode? start = Modules[MarkdownModule.Check](data[0]);
+        MarkdownNode? start = Modules[MdSyntax.Check](data[0]);
         if (start is null) {
             throw new Exception("Invalid markdown!");
         }
@@ -48,13 +49,18 @@ internal sealed class MarkdownReader : IPrototypable<MarkdownReader>
         int dctr = 1;
         int mctr = 1;
         while (true) {
-            ModuleDelegate del = Modules[(MarkdownModule)mctr];
+            MdReaderDelegate del = Modules[(MdSyntax)mctr];
             MarkdownNode? node = del(data[dctr]);
             if (node is null) {
                 mctr += 1;
                 continue;
             }
-            yield return (MarkdownNode)node;
+            MarkdownNode notNull = (MarkdownNode)node;
+            if (node!.Value.Identifier is MdSyntax.Finished) {
+                yield return notNull;
+                yield break;
+            }
+            yield return notNull;
             dctr += 1;
             mctr += 1;
         }

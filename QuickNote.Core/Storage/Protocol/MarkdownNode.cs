@@ -3,17 +3,18 @@ namespace QuickNote.Core.Storage;
 
 internal struct MarkdownNode {
 
-    public bool IsFinish { get; }
+    public MdSyntax Identifier;
 
-    public ValueType? Type { get; }
+    private ValueType? Type { get; }
 
-    public string? Content { get; }
+    private string? Content { get; }
 
     public MarkdownNode() {
-        IsFinish = true;
+        Identifier = MdSyntax.Finished;
     }
 
-    public MarkdownNode(ValueType type, string content) {
+    private MarkdownNode(MdSyntax syntax, ValueType type, string content) {
+        Identifier = syntax;
         Type = type;
         Content = content;
     }
@@ -21,7 +22,21 @@ internal struct MarkdownNode {
     public bool TryConvert<TType>(out TType? value) 
         where TType : IParsable<TType> {
         value = default(TType);
-        if (IsFinish) return false;
+        if (Identifier is MdSyntax.Finished) return false;
         return TType.TryParse(Content, null, out value);
+    }
+
+    public static MarkdownNode Create<T>(
+        MdSyntax ident,
+        T value,
+        string content)
+        where T : struct {
+        Type type = typeof(T);
+        if (!type.IsValueType) {
+            throw new Exception("Expected value type!");
+        }
+        MarkdownNode node = new MarkdownNode(ident, value, content);
+
+        return node;
     }
 }
