@@ -9,8 +9,8 @@ internal struct TodoFile : IEquatable<TodoFile> {
 
     public DateTime Identifier { get; }
 
-    public Task<string> ReadOp => File.ReadAllTextAsync(Fullpath);
-
+    public Task<string[]> ReadLines => File.ReadAllLinesAsync(Fullpath);
+    
     internal TodoFile(string path) {
         Fullpath = path;
         Identifier = DateFromFilePath(path);

@@ -1,7 +1,7 @@
 
 namespace QuickNote.Core.Storage;
 
-internal struct MarkdownNode {
+public struct MarkdownNode {
 
     public MdSyntax Identifier;
 

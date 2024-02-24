@@ -1,11 +1,8 @@
-
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using QuickNote.Core.Helper;
 
 namespace QuickNote.Core.Storage;
 
-internal enum MdSyntax {
+public enum MdSyntax {
     Check = 0,
     Name = 1,
     Appointment = 2,
