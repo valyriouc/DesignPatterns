@@ -1,5 +1,3 @@
-
-using System.Reflection;
 using System.Text;
 using QuickNote.Core.Helper;
 

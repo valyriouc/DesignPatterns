@@ -1,5 +1,8 @@
 namespace QuickNote.Core.Storage;
 
+/// <summary>
+/// It's a proxy around the whole persistence/storage mechanism 
+/// </summary>
 public class StorageContext {
 
     public string Basepath { get; init; }

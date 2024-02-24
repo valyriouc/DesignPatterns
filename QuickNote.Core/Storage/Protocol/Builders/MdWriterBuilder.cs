@@ -1,6 +1,9 @@
 
 namespace QuickNote.Core.Storage;
 
+/// <summary>
+/// Builder pattern in action
+/// </summary>
 public class MdWriterBuilder {
     
     private MarkdownWriter Writer { get; set;}

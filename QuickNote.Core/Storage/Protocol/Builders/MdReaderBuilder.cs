@@ -1,6 +1,9 @@
 
 namespace QuickNote.Core.Storage;
 
+/// <summary>
+/// Builder pattern in action
+/// </summary>
 public class MdReaderBuilder {
     
     private MarkdownReader Reader { get; set;}
