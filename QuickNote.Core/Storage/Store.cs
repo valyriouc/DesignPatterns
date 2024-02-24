@@ -25,6 +25,4 @@ internal class Store {
 
         return new Store(files);
     }
-
-
 }

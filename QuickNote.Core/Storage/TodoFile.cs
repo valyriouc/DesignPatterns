@@ -49,4 +49,5 @@ internal struct TodoFile : IEquatable<TodoFile> {
 
     public bool Equals(TodoFile other) => 
         this.Identifier.Date == other.Identifier.Date;
+
 }
