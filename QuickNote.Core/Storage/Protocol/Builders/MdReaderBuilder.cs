@@ -26,13 +26,13 @@ public class MdReaderBuilder {
 
     public MdReaderBuilder WithAppointment() {
         Reader.AddModule(MdSyntax.Appointment, (string content) => 
-            new MarkdownNode(MdSyntax.Appointment, (content.Substring(1, content.Length - 1) == "true").ToString()));
+            new MarkdownNode(MdSyntax.Appointment, (content.Substring(1, content.Length - 2) == "true").ToString()));
         return this;
     }
 
     public MdReaderBuilder WithEndDate() {
         Reader.AddModule(MdSyntax.Enddate, (string content) => 
-            new MarkdownNode(MdSyntax.Appointment, content.Substring(1, content.Length - 1)));
+            new MarkdownNode(MdSyntax.Appointment, content.Substring(1, content.Length - 2)));
         return this;
     }
     
