@@ -15,7 +15,6 @@ public class MarkdownWriterTests
 
         List<MarkdownNode> node = new List<MarkdownNode>() { new MarkdownNode(MdSyntax.Check, true.ToString()), new MarkdownNode(MdSyntax.Name, "Todo1") };
 
-
         string result = writer.Write(node);
 
         Assert.Equal("[X] {Todo1}", result);

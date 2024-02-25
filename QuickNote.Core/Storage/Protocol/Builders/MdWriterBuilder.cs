@@ -22,7 +22,7 @@ public class MdWriterBuilder {
                 return null;
             }
 
-            return isChecked ? "[X]" : "[ ]";
+            return isChecked ? "[X]" : "[]";
         });
 
         return this;

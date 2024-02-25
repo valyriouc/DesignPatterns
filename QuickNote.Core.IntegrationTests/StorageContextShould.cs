@@ -329,4 +329,53 @@ public class StorageContextShould {
         Assert.True(first.IsFinished);
         Assert.Equal("Todo1", first.Name);
     }
+
+    [Fact]
+    public async Task UpdateAddsNewTodoEntries()
+    {
+        TestDirectoryBuilder builder = new();
+
+        string basepath = builder
+            .WithDateTimeFile(DateTime.Now, () =>
+            {
+                StringBuilder sb = new StringBuilder();
+                return sb.ToString();
+            })
+            .Build();
+
+        MdReaderBuilder rb = new MdReaderBuilder()
+            .WithCheck()
+            .WithName();
+
+        MdWriterBuilder wr = new MdWriterBuilder()
+            .WithCheck()
+            .WithName();
+
+        StorageContext context = new StorageContext(basepath, rb, wr);
+
+        List<Todo> todos = new List<Todo>() { 
+            new Todo() { IsFinished = true, Name = "Todo1" },
+            new Todo() { IsFinished = false, Name = "Todo2" },
+            new Todo() { IsFinished = true, Name = "Todo3" } };
+
+        await context.UpdateOrCreateAsync(DateTime.Now, todos);
+
+        IEnumerable<Todo> result = context
+            .GetSingleAsync<Todo>(DateTime.Now)
+            .ToBlockingEnumerable();
+
+        Assert.Equal(3, result.Count());
+
+        int count = 0;
+        foreach (Todo todo in result)
+        {
+            count += 1;
+            if (count % 2 == 0)
+            {
+                Assert.False(todo.IsFinished);
+            }
+
+            Assert.Equal($"Todo{count}", todo.Name);
+        }
+    }
 }
