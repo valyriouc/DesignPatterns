@@ -32,8 +32,9 @@ internal sealed class MarkdownReader : IPrototypable<MarkdownReader>
     public bool RemoveModule(MdSyntax module) => Modules.Remove(module);
 
     public IEnumerable<MarkdownNode> Read(string line) {
+
         if (string.IsNullOrWhiteSpace(line)) {
-            throw new Exception("Invalid markdown!");
+            yield break;
         }
 
         string[] data = line.Split(" ");
