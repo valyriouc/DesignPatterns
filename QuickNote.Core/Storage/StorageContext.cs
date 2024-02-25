@@ -1,24 +1,5 @@
 namespace QuickNote.Core.Storage;
 
-public struct TodoCollection<T> 
-    where T : IMarkdownReadable<T> {
-
-    private DateTime identifier;
-
-    public DateTime Identifier
-    {
-        get => identifier.Date;
-        set => identifier = value;
-    }
-
-    public IEnumerable<T> Todos { get; init; }
-
-    public TodoCollection(DateTime identifier, IEnumerable<T> todos) {
-        Identifier = identifier;
-        Todos = todos;
-    }
-}
-
 /// <summary>
 /// It's a proxy around the whole persistence/storage mechanism 
 /// </summary>
