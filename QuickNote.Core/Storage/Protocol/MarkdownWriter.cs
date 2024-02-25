@@ -3,9 +3,9 @@ using QuickNote.Core.Helper;
 
 namespace QuickNote.Core.Storage;
 
-internal delegate string? MdWritingDelegate(MarkdownNode node);
+public delegate string? MdWritingDelegate(MarkdownNode node);
 
-internal sealed class MarkdownWriter : IPrototypable<MarkdownWriter> {
+public sealed class MarkdownWriter : IPrototypable<MarkdownWriter> {
 
     private Dictionary<MdSyntax, MdWritingDelegate> Modules {get; set;}
 
@@ -32,11 +32,13 @@ internal sealed class MarkdownWriter : IPrototypable<MarkdownWriter> {
         StringBuilder sb = new StringBuilder();
 
         IEnumerator<MarkdownNode> enumerator = line.GetEnumerator();
+        enumerator.MoveNext();
         if (enumerator.Current.Identifier is not MdSyntax.Check) {
             throw new Exception("Expected markdown check node!");
         }
         
         string? start = Modules[MdSyntax.Check].Invoke(enumerator.Current);
+        sb.Append(start);
 
         while (enumerator.MoveNext()) {
             MarkdownNode current = enumerator.Current;
@@ -44,6 +46,7 @@ internal sealed class MarkdownWriter : IPrototypable<MarkdownWriter> {
                 break;
             string? result = Modules[current.Identifier].Invoke(current);
             if (string.IsNullOrWhiteSpace(result))
+                break;
             sb.Append($" {result}");
         }
 
