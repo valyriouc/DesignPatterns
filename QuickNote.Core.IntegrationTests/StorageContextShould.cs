@@ -169,4 +169,125 @@ public class StorageContextShould {
         Assert.False(last.IsFinished);
         Assert.Equal("Todo2", last.Name);
     }
+
+    [Fact]
+    public async Task ReturnsSingleTodosFromMultipleFiles()
+    {
+        TestDirectoryBuilder builder = new();
+
+        string basepath = builder
+            .WithDateTimeFile(DateTime.Now, () =>
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("[X] {Todo1}");
+                return sb.ToString();
+            })
+            .WithDateTimeFile(DateTime.Now.AddDays(-1).Date, () =>
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("[] {Todo2}");
+                return sb.ToString();
+            })
+            .Build();
+
+        MdReaderBuilder rb = new MdReaderBuilder()
+            .WithCheck()
+            .WithName();
+
+        MdWriterBuilder wr = new MdWriterBuilder()
+            .WithCheck()
+            .WithName();
+
+        StorageContext context = new StorageContext(basepath, rb, wr);
+
+        IEnumerable<TodoCollection<Todo>> result = context
+            .GetAllAsync<Todo>()
+            .ToBlockingEnumerable();
+
+        Assert.Equal(2, result.Count());
+
+        TodoCollection<Todo> first = result.First();
+
+        Assert.Equal(DateTime.Now.AddDays(-1).Date, first.Identifier);
+        Assert.Single(first.Todos);
+
+        Todo firstTodo = first.Todos.First();
+        Assert.False(firstTodo.IsFinished);
+        Assert.Equal("Todo2", firstTodo.Name);
+
+        TodoCollection<Todo> last = result.Last();
+
+        Assert.Equal(DateTime.Now.Date, last.Identifier);
+        Assert.Single(last.Todos);
+
+        Todo lastTodo = last.Todos.First();
+        Assert.True(lastTodo.IsFinished);
+        Assert.Equal("Todo1", lastTodo.Name);
+
+    }
+
+    [Fact]
+    public async Task ReturnsMultipleTodosFromMultipleFiles()
+    {
+        TestDirectoryBuilder builder = new();
+
+        string basepath = builder
+            .WithDateTimeFile(DateTime.Now, () =>
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("[X] {Todo1}");
+                sb.AppendLine("[] {Todo3}");
+                return sb.ToString();
+            })
+            .WithDateTimeFile(DateTime.Now.AddDays(-1).Date, () =>
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("[] {Todo2}");
+                sb.AppendLine("[X] {Testing}");
+                return sb.ToString();
+            })
+            .Build();
+
+        MdReaderBuilder rb = new MdReaderBuilder()
+            .WithCheck()
+            .WithName();
+
+        MdWriterBuilder wr = new MdWriterBuilder()
+            .WithCheck()
+            .WithName();
+
+        StorageContext context = new StorageContext(basepath, rb, wr);
+
+        IEnumerable<TodoCollection<Todo>> result = context
+            .GetAllAsync<Todo>()
+            .ToBlockingEnumerable();
+
+        Assert.Equal(2, result.Count());
+
+        TodoCollection<Todo> first = result.First();
+
+        Assert.Equal(DateTime.Now.AddDays(-1).Date, first.Identifier);
+        Assert.Equal(2, first.Todos.Count());
+
+        Todo firstTodo1 = first.Todos.First();
+        Assert.False(firstTodo1.IsFinished);
+        Assert.Equal("Todo2", firstTodo1.Name);
+
+        Todo lastTodo1 = first.Todos.Last();
+        Assert.True(lastTodo1.IsFinished);
+        Assert.Equal("Testing", lastTodo1.Name);
+
+        TodoCollection<Todo> last = result.Last();
+
+        Assert.Equal(DateTime.Now.Date, last.Identifier);
+        Assert.Equal(2, last.Todos.Count());
+
+        Todo firstTodo2 = last.Todos.First();
+        Assert.True(firstTodo2.IsFinished);
+        Assert.Equal("Todo1", firstTodo2.Name);
+
+        Todo lastTodo2 = last.Todos.Last();
+        Assert.False(lastTodo2.IsFinished);
+        Assert.Equal("Todo3", lastTodo2.Name);
+    }
 }
