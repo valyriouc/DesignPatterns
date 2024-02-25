@@ -4,10 +4,11 @@ internal class TestDirectoryBuilder {
 
     private HashSet<string> TodoFiles { get; set; }
 
-    public string Basepath => Path.Combine(Directory.GetCurrentDirectory(), Guid.NewGuid().ToString());
+    public string Basepath { get; init; } 
 
     public TestDirectoryBuilder() {
         TodoFiles = new HashSet<string>();
+        Basepath = Path.Combine(Directory.GetCurrentDirectory(), Guid.NewGuid().ToString());
     }
 
     public TestDirectoryBuilder WithTodoFile(string name) {
