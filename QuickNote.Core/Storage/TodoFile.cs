@@ -30,6 +30,16 @@ internal struct TodoFile : IEquatable<TodoFile> {
         writer.Write(sb.ToString());
     }
 
+    public void Write(Func<IEnumerable<string>> contentProvider)
+    {
+        StringBuilder sb = new StringBuilder();
+        foreach (string line in contentProvider())
+        {
+            sb.AppendLine(line);
+        }
+        File.WriteAllText(Fullpath, sb.ToString());
+    }
+
     public static TodoFile CreateFrom(string basepath, DateTime date) {
         string filename = date.ToString("yyyy-MM-dd");
         string path = Path.Combine(basepath, $"{filename}.md");

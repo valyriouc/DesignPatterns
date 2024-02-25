@@ -38,10 +38,10 @@ public class StorageContext {
     }
 
     public async IAsyncEnumerable<T> GetSingleAsync<T>(DateTime identifier) 
-        where T : IMarkdownReadable<T>{
-        
+        where T : IMarkdownReadable<T> {
+
         TodoFile? file = Store.MarkdownFiles
-            .FirstOrDefault(x => x.Identifier.Date == identifier.Date);
+            .FirstOrNull(x => x.Identifier == identifier.Date);
 
         if (file is null) {
             yield break;
@@ -91,5 +91,19 @@ public class StorageContext {
 
         IEnumerable<string> result = ConvertNodes<T>(todos);
         file.Value.Append(() => result);
+    }
+}
+
+file static class IEnumerableExtensions
+{
+    public static T? FirstOrNull<T>(this IEnumerable<T> entries, Func<T, bool> predicate)
+        where T : struct 
+    {
+        if (entries.Count() == 0)
+        {
+            return null;
+        }
+        T first = entries.FirstOrDefault(predicate);
+        return first.Equals(default(T)) ? null : first;
     }
 }

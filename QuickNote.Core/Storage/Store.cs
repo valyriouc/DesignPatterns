@@ -7,8 +7,6 @@ internal class Store {
 
     public HashSet<TodoFile> MarkdownFiles { get; init; }
 
-    public IEnumerable<TodoFile> FilesIter => MarkdownFiles.AsEnumerable();
-
     private Store(IEnumerable<TodoFile> files) {
         MarkdownFiles = new(files);
     }
@@ -17,6 +15,8 @@ internal class Store {
         if (string.IsNullOrWhiteSpace(basepath)) {
             throw new ArgumentNullException(nameof(basepath));
         }
+
+        var resu = Directory.EnumerateFiles(basepath);
 
         IEnumerable<TodoFile> files = Directory
             .EnumerateFiles(basepath)
