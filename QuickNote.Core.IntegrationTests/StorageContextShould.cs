@@ -92,4 +92,82 @@ public class StorageContextShould {
         Assert.False(first.IsFinished);
         Assert.Equal("Todo1", first.Name);
     }
+
+    [Fact]
+    public async Task ReturnsOneTodoWithStateChecked()
+    {
+        TestDirectoryBuilder builder = new();
+
+        string basepath = builder
+            .WithDateTimeFile(DateTime.Now, () =>
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("[X] {Todo1}");
+                return sb.ToString();
+            })
+            .Build();
+
+        MdReaderBuilder rb = new MdReaderBuilder()
+            .WithCheck()
+            .WithName();
+
+        MdWriterBuilder wr = new MdWriterBuilder()
+            .WithCheck()
+            .WithName();
+
+        StorageContext context = new StorageContext(basepath, rb, wr);
+
+        IEnumerable<Todo> result = context
+            .GetSingleAsync<Todo>(DateTime.Now)
+            .ToBlockingEnumerable();
+
+        Assert.Single(result);
+
+        Todo first = result.First();
+
+        Assert.True(first.IsFinished);
+        Assert.Equal("Todo1", first.Name);
+    }
+
+    [Fact]
+    public async Task ReturnsMultipleTodosWithCorrectData()
+    {
+        TestDirectoryBuilder builder = new();
+
+        string basepath = builder
+            .WithDateTimeFile(DateTime.Now, () =>
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("[X] {Todo1}");
+                sb.AppendLine("[] {Todo2}");
+                return sb.ToString();
+            })
+            .Build();
+
+        MdReaderBuilder rb = new MdReaderBuilder()
+            .WithCheck()
+            .WithName();
+
+        MdWriterBuilder wr = new MdWriterBuilder()
+            .WithCheck()
+            .WithName();
+
+        StorageContext context = new StorageContext(basepath, rb, wr);
+
+        IEnumerable<Todo> result = context
+            .GetSingleAsync<Todo>(DateTime.Now)
+            .ToBlockingEnumerable();
+
+        Assert.Equal(2, result.Count());
+
+        Todo first = result.First();
+
+        Assert.True(first.IsFinished);
+        Assert.Equal("Todo1", first.Name);
+
+        Todo last = result.Last();
+
+        Assert.False(last.IsFinished);
+        Assert.Equal("Todo2", last.Name);
+    }
 }
