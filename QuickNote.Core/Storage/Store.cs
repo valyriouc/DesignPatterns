@@ -15,12 +15,9 @@ internal class Store {
         if (string.IsNullOrWhiteSpace(basepath)) {
             throw new ArgumentNullException(nameof(basepath));
         }
-
-        var resu = Directory.EnumerateFiles(basepath);
-
         IEnumerable<TodoFile> files = Directory
             .EnumerateFiles(basepath)
-            .Where(x => x.Substring(x.IndexOf(".") + 1) == "md")
+            .Where(x => Path.GetExtension(x) == ".md")
             .Select(x => new TodoFile(x));
 
         return new Store(files);
