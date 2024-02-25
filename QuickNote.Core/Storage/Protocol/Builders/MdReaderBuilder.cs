@@ -20,7 +20,7 @@ public class MdReaderBuilder {
 
     public MdReaderBuilder WithName() {
         Reader.AddModule(MdSyntax.Name, (string content) => 
-            new MarkdownNode(MdSyntax.Name, content.Substring(1, content.Length - 1)));
+            new MarkdownNode(MdSyntax.Name, content.Substring(1, content.Length - 2)));
         return this;
     }
 
@@ -36,7 +36,7 @@ public class MdReaderBuilder {
         return this;
     }
     
-    internal MarkdownReader Build() {
+    public MarkdownReader Build() {
         MarkdownReader reader = Reader;
         Reader = new MarkdownReader();
         return reader;
