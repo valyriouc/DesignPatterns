@@ -37,12 +37,16 @@ public struct Todo : IMarkdownReadable<Todo>, IMarkdownWriteable<Todo>{
         IEnumerator<MarkdownNode> enumerator = nodes.GetEnumerator();
         while(!done) {
             MarkdownNode node = enumerator.Current;
+            if (node.Equals(default(MarkdownNode)))
+            {
+                break;
+            }
             switch (node.Identifier) {
                 case MdSyntax.Check:
-                    if (!node.TryConvert<bool>(out bool isFinished)) {
+                    if (!node.TryConvert<bool>(out bool isChecked)) {
                         throw new Exception($"Could not parse {nameof(todo.IsFinished)}!");
                     }
-                    todo.IsFinished = isFinished;
+                    todo.IsFinished = isChecked;
                     break;
                 case MdSyntax.Name:
                     if (!node.TryConvert<string>(out string? name)) {
