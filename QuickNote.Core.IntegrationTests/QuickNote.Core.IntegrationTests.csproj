@@ -20,4 +20,8 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\QuickNote.Core\QuickNote.Core.csproj" />
+  </ItemGroup>
+
 </Project>
