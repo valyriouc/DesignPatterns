@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-
 namespace QuickNote.Core.IntegrationTests.Helper;
 
 internal class TestDirectoryBuilder {
