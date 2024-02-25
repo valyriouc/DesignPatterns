@@ -7,7 +7,7 @@ internal class TestDirectoryBuilder {
     public string Basepath { get; init; } 
 
     public TestDirectoryBuilder() {
-        TodoFiles = new Dictionary<string, Func<string>>();
+        TodoFiles = new Dictionary<string, Func<string>?>();
         Basepath = Path.Combine(Directory.GetCurrentDirectory(), Guid.NewGuid().ToString());
     }
 
@@ -26,7 +26,7 @@ internal class TestDirectoryBuilder {
 
     public string Build() {
         Directory.CreateDirectory(Basepath);
-        foreach (KeyValuePair<string, Func<string>> file in TodoFiles) {
+        foreach (KeyValuePair<string, Func<string>?> file in TodoFiles) {
             string filepath = Path.Combine(Basepath, $"{file.Key}.md");
             File.WriteAllText(filepath, file.Value?.Invoke());
         }
