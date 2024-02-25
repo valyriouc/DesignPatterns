@@ -10,9 +10,9 @@ public enum MdSyntax {
     Finished = 100
 }
 
-internal delegate MarkdownNode? MdReaderDelegate(string content);
+public delegate MarkdownNode? MdReaderDelegate(string content);
 
-internal sealed class MarkdownReader : IPrototypable<MarkdownReader>
+public sealed class MarkdownReader : IPrototypable<MarkdownReader>
 {
     private Dictionary<MdSyntax, MdReaderDelegate> Modules { get; set;}
 
@@ -39,28 +39,53 @@ internal sealed class MarkdownReader : IPrototypable<MarkdownReader>
 
         string[] data = line.Split(" ");
         MarkdownNode? start = Modules[MdSyntax.Check](data[0]);
-        if (start is null) {
-            throw new Exception("Invalid markdown!");
-        }
-        yield return (MarkdownNode)start;
+        ThrowIfNull(start);
+        yield return (MarkdownNode)start!;
 
-        int dctr = 1;
-        int mctr = 1;
-        while (true) {
-            MdReaderDelegate del = Modules[(MdSyntax)mctr];
-            MarkdownNode? node = del(data[dctr]);
-            if (node is null) {
-                mctr += 1;
-                continue;
-            }
-            MarkdownNode notNull = (MarkdownNode)node;
-            if (node!.Value.Identifier is MdSyntax.Finished) {
-                yield return notNull;
-                yield break;
-            }
-            yield return notNull;
-            dctr += 1;
-            mctr += 1;
+        if (data.Length == 1)
+        {
+            throw new Exception("Name is required!");
+        }
+
+        MarkdownNode? name = Modules[MdSyntax.Name](data[1]);
+        ThrowIfNull(name);
+        yield return (MarkdownNode)name!;   
+
+        if (data.Length == 2)
+        {
+            yield return new MarkdownNode();
+            yield break;
+        }
+
+        if (Modules.ContainsKey(MdSyntax.Appointment))
+        {
+            MarkdownNode? appointment = Modules[MdSyntax.Appointment](data[2]);
+            ThrowIfNull(appointment);
+            yield return (MarkdownNode)appointment!;    
+        }
+
+        if (data.Length == 3)
+        {
+            yield return new MarkdownNode();
+            yield break;
+        }
+
+        if (Modules.ContainsKey(MdSyntax.Enddate))
+        {
+            MarkdownNode? node = Modules[MdSyntax.Enddate](data[3]);
+            ThrowIfNull(node);
+            yield return (MarkdownNode)node!;
+        }
+
+        yield return new MarkdownNode();
+        yield break;
+    }
+
+    private void ThrowIfNull(object? value)
+    {
+        if (value is null)
+        {
+            throw new Exception("Invalid markdown!");
         }
     }
 
