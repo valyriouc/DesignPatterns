@@ -26,8 +26,7 @@ internal struct TodoFile : IEquatable<TodoFile> {
         foreach (string line in contentProvider()) {
             sb.AppendLine(line);
         }
-        using StreamWriter writer = File.AppendText(Fullpath);
-        writer.Write(sb.ToString());
+        File.AppendAllText(Fullpath, sb.ToString());
     }
 
     public void Write(Func<IEnumerable<string>> contentProvider)

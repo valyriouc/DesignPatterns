@@ -58,14 +58,6 @@ public class StorageContext {
         }
     }
 
-    private IEnumerable<string> ConvertNodes<T>(IEnumerable<T> todos) 
-        where T : IMarkdownWriteable<T> {
-            foreach (T todo in todos) {
-                MarkdownWriter writer = Writer.Copy();
-                yield return writer.Write(todo.Write());
-            }
-    }
-
     public async Task UpdateOrCreateAsync<T>(DateTime datetime, IEnumerable<T> todos) 
         where T : IMarkdownWriteable<T> {
 
@@ -78,6 +70,16 @@ public class StorageContext {
 
         IEnumerable<string> result = ConvertNodes<T>(todos);
         file.Value.Append(() => result);
+    }
+
+    private IEnumerable<string> ConvertNodes<T>(IEnumerable<T> todos)
+        where T : IMarkdownWriteable<T>
+    {
+        foreach (T todo in todos)
+        {
+            MarkdownWriter writer = Writer.Copy();
+            yield return writer.Write(todo.Write());
+        }
     }
 }
 

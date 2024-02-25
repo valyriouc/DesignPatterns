@@ -33,6 +33,7 @@ public class MdWriterBuilder {
             if (node.Identifier != MdSyntax.Name) {
                 return null;
             }
+
             if (!node.TryConvert<string>(out string? name)) {
                 return null;
             }
@@ -73,7 +74,7 @@ public class MdWriterBuilder {
         return this;
     }
 
-    internal MarkdownWriter Build() {
+    public MarkdownWriter Build() {
         MarkdownWriter writer = Writer;
         Writer = new MarkdownWriter();
         return writer;

@@ -18,9 +18,9 @@ public struct Todo : IMarkdownReadable<Todo>, IMarkdownWriteable<Todo>{
 
     public string Name { get; set; }
 
-    public bool IsAppointment { get; set;}
+    public bool? IsAppointment { get; set; } = null;
 
-    public DateTime? EndDate { get; set; }
+    public DateTime? EndDate { get; set; } = null;
 
     public Todo(bool isFinished, string name, bool isAppoint, DateTime? endDate) {
         IsFinished = isFinished;
@@ -71,10 +71,13 @@ public struct Todo : IMarkdownReadable<Todo>, IMarkdownWriteable<Todo>{
     public IEnumerable<MarkdownNode> Write()
     {
         yield return new MarkdownNode(MdSyntax.Check, IsFinished.ToString());
-        yield return new MarkdownNode(MdSyntax.Check, Name);
-        yield return new MarkdownNode(MdSyntax.Check, IsAppointment.ToString());
+        yield return new MarkdownNode(MdSyntax.Name, Name);
+        if (this.IsAppointment is not null)
+        {
+            yield return new MarkdownNode(MdSyntax.Appointment, IsAppointment!.ToString()!);
+        }
         if (EndDate is not null) {
-            yield return new MarkdownNode(MdSyntax.Check, EndDate!.ToString());
+            yield return new MarkdownNode(MdSyntax.Enddate, EndDate!.ToString()!);
         }
         yield return new MarkdownNode();
     }
