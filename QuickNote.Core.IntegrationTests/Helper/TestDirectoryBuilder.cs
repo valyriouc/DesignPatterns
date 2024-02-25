@@ -20,6 +20,7 @@ internal class TestDirectoryBuilder {
     }
 
     public string Build() {
+        Directory.CreateDirectory(Basepath);
         foreach (string file in TodoFiles) {
             string filepath = Path.Combine(Basepath, $"{file}.md");
             File.Create(filepath);
