@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickNote.Core", "QuickNote.Core\QuickNote.Core.csproj", "{B33C4897-699E-4CEA-BBC9-92A8504B3707}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickNote.Core.IntegrationTests", "QuickNote.Core.IntegrationTests\QuickNote.Core.IntegrationTests.csproj", "{AE8EB315-253C-471E-A453-D6606E3C5C3C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{B33C4897-699E-4CEA-BBC9-92A8504B3707}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B33C4897-699E-4CEA-BBC9-92A8504B3707}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B33C4897-699E-4CEA-BBC9-92A8504B3707}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE8EB315-253C-471E-A453-D6606E3C5C3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE8EB315-253C-471E-A453-D6606E3C5C3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE8EB315-253C-471E-A453-D6606E3C5C3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE8EB315-253C-471E-A453-D6606E3C5C3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
