@@ -32,15 +32,9 @@ public struct Todo : IMarkdownReadable<Todo>, IMarkdownWriteable<Todo>{
     public static Todo Read(IEnumerable<MarkdownNode> nodes)
     {
         Todo todo = new();
-
-        bool done = false;
         IEnumerator<MarkdownNode> enumerator = nodes.GetEnumerator();
-        while(!done) {
+        while(enumerator.MoveNext()) {
             MarkdownNode node = enumerator.Current;
-            if (node.Equals(default(MarkdownNode)))
-            {
-                break;
-            }
             switch (node.Identifier) {
                 case MdSyntax.Check:
                     if (!node.TryConvert<bool>(out bool isChecked)) {
@@ -67,10 +61,8 @@ public struct Todo : IMarkdownReadable<Todo>, IMarkdownWriteable<Todo>{
                     todo.EndDate = endDate;
                     break;
                 default:
-                    done = true;
                     break;
             }
-            enumerator.MoveNext();
         }
         
         return todo;
