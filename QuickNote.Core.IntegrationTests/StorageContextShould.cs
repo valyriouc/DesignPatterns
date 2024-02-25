@@ -1,7 +1,6 @@
 using QuickNote.Core.IntegrationTests.Helper;
 using QuickNote.Core.Storage;
 using System.Text;
-using Xunit.Sdk;
 
 namespace QuickNote.Core.IntegrationTests;
 
