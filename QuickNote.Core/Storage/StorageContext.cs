@@ -3,7 +3,13 @@ namespace QuickNote.Core.Storage;
 public struct TodoCollection<T> 
     where T : IMarkdownReadable<T> {
 
-    public DateTime Identifier { get; init; }
+    private DateTime identifier;
+
+    public DateTime Identifier
+    {
+        get => identifier.Date;
+        set => identifier = value;
+    }
 
     public IEnumerable<T> Todos { get; init; }
 
