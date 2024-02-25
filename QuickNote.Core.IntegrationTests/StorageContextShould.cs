@@ -1,5 +1,6 @@
 using QuickNote.Core.IntegrationTests.Helper;
 using QuickNote.Core.Storage;
+using System.Text;
 using Xunit.Sdk;
 
 namespace QuickNote.Core.IntegrationTests;
@@ -54,5 +55,41 @@ public class StorageContextShould {
             .ToBlockingEnumerable();
 
         Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task ReturnsOneTodoOfOneFileWithCorrectName()
+    {
+        TestDirectoryBuilder builder = new();
+
+        string basepath = builder
+            .WithDateTimeFile(DateTime.Now, () =>
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("[] {Todo1}");
+                return sb.ToString();
+            })
+            .Build();
+
+        MdReaderBuilder rb = new MdReaderBuilder()
+            .WithCheck()
+            .WithName();
+
+        MdWriterBuilder wr = new MdWriterBuilder()
+            .WithCheck()
+            .WithName();
+
+        StorageContext context = new StorageContext(basepath, rb, wr);
+
+        IEnumerable<Todo> result = context
+            .GetSingleAsync<Todo>(DateTime.Now)
+            .ToBlockingEnumerable();
+
+        Assert.Single(result);
+
+        Todo first = result.First();
+
+        Assert.False(first.IsFinished);
+        Assert.Equal("Todo1", first.Name);
     }
 }
