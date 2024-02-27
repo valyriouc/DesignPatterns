@@ -14,6 +14,10 @@ public interface IMarkdownWriteable<T> {
 
 public struct Todo : IMarkdownReadable<Todo>, IMarkdownWriteable<Todo>{
 
+    private static int counter = 0;
+
+    public int Id { get; init; }
+
     public bool IsFinished { get; set; }
 
     public string Name { get; set; }
@@ -23,6 +27,7 @@ public struct Todo : IMarkdownReadable<Todo>, IMarkdownWriteable<Todo>{
     public DateTime? EndDate { get; set; } = null;
 
     public Todo(bool isFinished, string name, bool isAppoint, DateTime? endDate) {
+        Id = ++counter;
         IsFinished = isFinished;
         Name = name;
         IsAppointment = isAppoint;
