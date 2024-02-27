@@ -72,6 +72,19 @@ public class StorageContext {
         file.Value.Append(() => result);
     }
 
+    public bool TryDelete(DateTime datetime)
+    {
+        TodoFile? file = Store.MarkdownFiles
+            .FirstOrDefault(x => x.Identifier.Date == datetime.Date);
+
+        if (file is null)
+        {
+            return false;
+        }
+
+        return file.Value!.TryDelete();
+    } 
+
     private IEnumerable<string> ConvertNodes<T>(IEnumerable<T> todos)
         where T : IMarkdownWriteable<T>
     {

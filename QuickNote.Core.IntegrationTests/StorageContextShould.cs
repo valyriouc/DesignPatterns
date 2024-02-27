@@ -378,4 +378,57 @@ public class StorageContextShould {
             Assert.Equal($"Todo{count}", todo.Name);
         }
     }
+
+    [Fact]
+    public async Task DeleteReturnsFalseWhenFileDoesNotExist()
+    {
+        TestDirectoryBuilder builder = new();
+
+        string basepath = builder
+            .WithDateTimeFile(DateTime.Now, () =>
+            {
+                StringBuilder sb = new StringBuilder();
+                return sb.ToString();
+            })
+            .Build();
+
+        MdReaderBuilder rb = new MdReaderBuilder()
+            .WithCheck()
+            .WithName();
+
+        MdWriterBuilder wr = new MdWriterBuilder()
+            .WithCheck()
+            .WithName();
+
+        StorageContext context = new StorageContext(basepath, rb, wr);
+
+        Assert.False(context.TryDelete(DateTime.Now.AddDays(-1)));
+    }
+
+    [Fact]
+    public async Task DeleteRemovesFileFromFileSystem()
+    {
+        TestDirectoryBuilder builder = new();
+
+        string basepath = builder
+            .WithDateTimeFile(DateTime.Now, () =>
+            {
+                StringBuilder sb = new StringBuilder();
+                return sb.ToString();
+            })
+            .Build();
+
+        MdReaderBuilder rb = new MdReaderBuilder()
+            .WithCheck()
+            .WithName();
+
+        MdWriterBuilder wr = new MdWriterBuilder()
+            .WithCheck()
+            .WithName();
+
+        StorageContext context = new StorageContext(basepath, rb, wr);
+
+        Assert.True(context.TryDelete(DateTime.Now));
+        Assert.False(File.Exists(Path.Combine(basepath, DateTime.Now.ToString("yyyy-MM-dd"))));
+    }
 }
