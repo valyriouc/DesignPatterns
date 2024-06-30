@@ -88,10 +88,6 @@ public class TodoApplication
         }
     }
 
-    public void Append(Todo todo)
-    {
-
-    }
 
 
     public void RegisterEventHandler(TodoEventHandler eventHandler)
